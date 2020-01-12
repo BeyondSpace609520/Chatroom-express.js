@@ -1,0 +1,34 @@
+extends layout
+
+block content
+	div.container
+		a.btn.btn-primary(href="/blog") Back
+		hr
+
+		div.blogDetail
+			div.panel.panel-primary
+				div.panel-heading #{article.title}
+				div.panel-body.wrapPanel(id="articleContent")
+				div.panel-footer Posted by: #{article.author} #{article.postTime}
+			div#fileAppend
+				span Attached File: 
+
+		div.blogComment
+			h5 Leave a Comment:
+			
+			textarea.form-control(id='commentText' rows='4' required)
+			button.btn.btn-success(onclick='onSubmitComment()') Submit
+			br
+			hr
+
+			p #[span.badge(id='commentCount')] Comments:
+
+			div.row.commentContent(id='commentContent')
+
+		script.
+			var article = !{JSON.stringify(article)};
+	
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
+	script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+	script(src='/javascripts/blogDetail.js')
+	

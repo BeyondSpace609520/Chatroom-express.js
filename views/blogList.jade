@@ -1,0 +1,17 @@
+extends blogLayout
+
+block blogContent
+	div.tab-content
+		div(id="total", class="tab-pane fade in active")
+		div(id="science", class="tab-pane fade")
+		div(id="sport", class="tab-pane fade")
+		div(id="music", class="tab-pane fade")
+
+	script.
+		var blogList = !{JSON.stringify(blog_list)}
+		
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
+	script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+	script(src='/javascripts/blogList.js')
+
+	

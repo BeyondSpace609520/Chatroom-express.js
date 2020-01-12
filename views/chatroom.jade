@@ -1,0 +1,30 @@
+extends layout
+
+block content
+	input(type="text", id="clipText")
+	div#snackbar Copy to Clipboard!
+	div.onlineUsersContainer
+		div.userTitle Contact Friends
+			input(id="searchFriend", type='text', onkeyup="searchFriend();")
+		div.onlineUsersWraper
+			ul(id='onlineUsers' data-simplebar)
+
+	div.chatContainer
+		ul(id='messages' data-simplebar)
+		span#notifyTyping
+		form#newChatForm(onsubmit="event.preventDefault(); return submitfunction();")
+			input(id="txtChatMessage", autocomplete="off", onkeyup="notifyTyping();" placeholder="Type yor message here..")
+			input(type='image', id="imgSend", src="/images/submit.jpg", width="40px")
+			input(type='submit', id='btnChatMessage', value='Send', style="display:none;")
+			input(type='image', id="imgAttachment", src="/images/if_31_486131.png", width="40px")
+			input(type="file", id="fileAttachment")
+
+	script.
+		var user = !{JSON.stringify(user)}
+		var user_list = !{JSON.stringify(user_list)};
+		var messages = !{JSON.stringify(messages)};
+	
+	script(src='/javascripts/jquery.min.js')
+	script(src='/socket.io/socket.io.js')
+	script(src='/javascripts/chat.js')
+	script(src='/vendor/ctxmenu/ctxmenu.js')

@@ -1,0 +1,179 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('chat-room:server');
+var http = require('http');
+var User = require('../models/user');
+var Message = require('../models/message');
+var chatNotificationCount = [];
+var totalUsers = [];
+
+var server = http.createServer(app);
+
+var io = require("socket.io")(server);
+
+io.on('connection', function (socket) {
+
+  // Listen to chantMessage event sent by client and emit a chatMessage to the client
+  socket.on('chatMessage', function (message) {
+    msg = new Message;
+    msg.sender = message.sender;
+    msg.receiver = message.receiver;
+    msg.timestamp = message.timestamp;
+    msg.text = message.text;
+    msg.id = message.id;
+    msg.type = message.type;
+    msg.save();
+
+    io.sockets.to(message.receiver).emit('chatMessage', message);
+  });
+
+  //Listen to deleteMessage event sent by client and emit a deleteMessage to the client
+  socket.on('deleteMessage', function (msgId) {
+    Message.findOneAndRemove({id: msgId}, function(err, msg){
+      Message.find()
+      .exec(function (err, messages) {
+        io.emit('deleteMessage', messages);
+      });
+    });
+  });
+
+  // Listen to notifyTyping event sent by client and emit a notifyTyping to the client
+  socket.on('notifyTyping', function (sender, receiver) {
+    io.sockets.to(receiver).emit('notifyTyping', sender, receiver);
+  });
+
+  socket.on('newRegister', function(user){
+    io.emit('newRegister', user);
+  });
+  
+  // Listen to newUser event sent by client and emit a newUser to the client with new list of online users
+  socket.on('newUser', function (user) {
+    var newUser = {id:socket.id, data: user};
+    
+
+    User.find()
+        .exec(function (err, user_list) {
+          if (err) { return next(err); }
+          totalUsers = [];
+          user_list.forEach((item) => {
+            var tUser = {id:0, data: item};
+            totalUsers.push(tUser);
+          });
+
+          totalUsers.forEach(function (user, index) {
+            if (user.data.name === newUser.data.name) {
+              totalUsers[index].id = newUser.id;
+              totalUsers[index].data.status = 'connect';
+
+              User.findById(newUser.data._id, function (err, dbuser) {
+                dbuser.status = 'connect';
+                dbuser.save();
+              } );
+            }
+          });
+          socket.join(newUser.data.name);
+          io.sockets.to(newUser.data.name).emit('newUser', newUser);
+
+          io.emit('onlineUsers', totalUsers);
+        });
+  });
+
+  // Listen to disconnect event sent by client and emit userIsDisconnected and onlineUsers (with new list of online users) to the client 
+  socket.on('disconnect', function () {
+    totalUsers.forEach(function (user, index) {
+      if (user.id === socket.id) {        
+        totalUsers[index].data.status = 'disconnect';
+
+        //schema
+        User.findById(user.data._id, function (err, dbuser) {
+          dbuser.status = 'disconnect';
+          dbuser.save();
+          dbuser.contactTime = new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false });
+        } );
+        socket.leave(user.data.name);
+        io.emit('userIsDisconnected', socket.id);
+        io.emit('onlineUsers', totalUsers);
+      }
+    });
+  });
+});
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**lert
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

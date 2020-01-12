@@ -1,0 +1,18 @@
+extends layout
+
+block content
+	div.container
+		h1 Welcome to my product
+		p RealTime Chat Room & Blog Website
+
+		if(user.role == 'Administrator')
+			a.btn.btn-primary(href='/dashboard') Get into Dashboard
+		hr
+
+		script.
+			var user = !{JSON.stringify(user)}
+
+		script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
+		script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+		script(src='/socket.io/socket.io.js')
+		script(src='/javascripts/index.js')

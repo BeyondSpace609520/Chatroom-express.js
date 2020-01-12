@@ -1,0 +1,40 @@
+extends layout
+
+block content
+	div.container
+		h2 User Management
+		div.table-responsive
+			table.table.table-striped.table-hover(id='mainTable1')
+				thead
+					tr
+						th Username
+						th Email
+						th Status
+						th Verify
+						th Role
+						th Operations
+				tbody#userTable
+
+		hr
+
+		h2 Article Management
+		div.table-responsive
+			table.table.table-striped.table-hover(id='mainTable2')
+				thead
+					tr
+						th Title
+						th Category
+						th Author
+						th PostTime
+						th Verify
+						th Operations
+				tbody#articleTable
+
+	script.
+		var user_list = !{JSON.stringify(user_list)};
+		var blog_list = !{JSON.stringify(blog_list)};
+		
+	script(src='/javascripts/jquery.min.js')
+	script(src='/javascripts/bootstrap.min.js')
+	script(src='/socket.io/socket.io.js')
+	script(src='/javascripts/dashboard.js')

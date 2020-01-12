@@ -1,0 +1,36 @@
+extends layout
+
+block content
+	div.container-fluid
+		div.row.content
+			div.col-sm-2.sidenav
+				hr
+				h4.text-center Categories
+				hr
+				
+				ul.nav.nav-pills.nav-stacked
+					li.active
+						a(href='#total', data-toggle='pill') Total
+					li
+						a(href='#science', data-toggle='pill') Science
+					li
+						a(href='#sport', data-toggle='pill') Sport
+					li
+						a(href='#music', data-toggle='pill') Music
+
+				hr
+
+				div.input-group
+					input.form-control(type="text", placeholder="Search Blog..")
+					span.input-group-btn
+						button.btn.btn-default(type='button')
+							span.glyphicon.glyphicon-search
+				hr
+				a.btn.btn-danger.form-control(href="/blog/create") Post a article
+			div.col-sm-10
+				block blogContent
+	footer.container-fluid
+		p.text-center 2019.10 Created by Beyond
+
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
+	script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')

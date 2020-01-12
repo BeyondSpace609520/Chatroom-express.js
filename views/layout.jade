@@ -1,0 +1,60 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
+
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css")
+    
+    link(rel='stylesheet', href='/stylesheets/editor.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/simplebar.css')
+
+    link(rel='stylesheet', href='/stylesheets/jquery.dataTables.min.css')
+  body
+    nav.navbar.navbar-default(style="margin:0px")
+      div.container-fluid
+        div.navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#auth-menu', aria-expand='false')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='#') Spring Site
+
+        div.collapse.navbar-collapse(id='auth-menu')
+          ul.nav.navbar-nav.navbar-right
+            if(!user)
+              li
+                a(href='/login') Login
+              li
+                a(href='/register') Register
+    
+            if(user)
+              li
+                a(href='/') Home
+              li
+                a(href='/chatroom') Chatroom
+              li
+                a(href='/blog') Blog
+              li.dropdown
+                a.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" style="padding:5px") 
+                  img(src='/images/avatar/1.jpg' height="40px")
+                  span #{user.username} 
+                  span.caret
+                ul.dropdown-menu
+                  li
+                    a(href='/profile/#{user._id}/view') My Profile
+                  li.divider
+                  li
+                    a(href='/logout') Logout
+
+    div.container-fluid
+      div.content
+        block content
+
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+    script(src='/javascripts/editor.js')
+    script(src='http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js')
+    

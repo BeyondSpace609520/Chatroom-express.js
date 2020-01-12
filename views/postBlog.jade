@@ -1,0 +1,23 @@
+extends layout
+
+block content
+	h3 Post a new blog
+	input.form-control(type='text', placeholder='Title of the article...', id='title', required)
+	textarea(id='txtEditor' required)
+	hr
+
+	label Append file:
+	input(type="file")
+
+	label Select blog type: 
+	select(id="blogCategories")
+		option Science
+		option Sport
+		option Music
+
+	a.btn.btn-primary(style='float:right; margin:0 20px 30px', href="/blog") Back
+	a.btn.btn-danger(style='float:right; margin:0 20px 30px', href="/blog", onclick='sendData()') Submit
+
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
+	script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+	script(src='/javascripts/postBlog.js')

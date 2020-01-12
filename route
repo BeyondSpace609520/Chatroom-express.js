@@ -1,0 +1,27 @@
+-----------------------------------------------
+friend send msg to user
+
+user rcv appear modal to accept contact
+	if accept, add to friends list
+	accepted user add to user.friend
+
+msg edit
+
+input text can change text and submit
+submitted text get through in li msg
+not append msg
+
+file upload
+-----------------------------------------------
+blog page
+
+comment
+-----------------------------------------------
+dashboard
+article allow, delete.
+
+
+http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css
+
+http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js
+
